@@ -169,7 +169,20 @@
             >
               Cancelar
             </button>
-            <button type="submit" class="btn btn-success">Guardar Cita</button>
+            <button
+              type="submit"
+              class="btn btn-success"
+              [disabled]="
+                !nuevaCita.fecha ||
+                !nuevaCita.hora ||
+                !nuevaCita.paciente?.id ||
+                !nuevaCita.medico?.id ||
+                !nuevaCita.diagnostico ||
+                !nuevaCita.tratamiento
+              "
+            >
+              Guardar Cita
+            </button>
           </div>
         </form>
       </div>

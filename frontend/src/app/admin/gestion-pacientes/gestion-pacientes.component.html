@@ -86,7 +86,7 @@
 
           <div class="mb-3">
             <label for="antecedentesPaciente" class="form-label"
-              >Antecedentes Médicos (opcional)</label
+              >Antecedentes Médicos</label
             >
             <textarea
               class="form-control"
@@ -97,7 +97,17 @@
             ></textarea>
           </div>
 
-          <button type="submit" class="btn btn-success">Registrar</button>
+          <button
+            type="submit"
+            class="btn btn-success"
+            [disabled]="
+              !nuevoPaciente.nombre ||
+              !nuevoPaciente.edad ||
+              !nuevoPaciente.antecedentesMedicos
+            "
+          >
+            Registrar
+          </button>
         </form>
       </div>
     </div>
