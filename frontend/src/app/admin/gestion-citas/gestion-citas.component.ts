@@ -4,6 +4,7 @@ import { PacientesService } from '../../services/pacientes.service';
 import { MedicosService } from '../../services/medicos.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+declare const bootstrap: any;
 
 @Component({
   selector: 'app-gestion-citas',
@@ -30,7 +31,6 @@ export class GestionCitasComponent implements OnInit {
   async cargarCitas() {
     try {
       this.citas = await this.citasService.getCitasMedicas();
-      console.log('Todas las Citas:', this.citas);
     } catch (err) {
       console.error('Error al obtener citas:', err);
     }
@@ -42,10 +42,11 @@ export class GestionCitasComponent implements OnInit {
         this.citas = await this.citasService.getCitasPorPaciente(
           this.pacienteId
         );
-        console.log('Citas filtradas por paciente:', this.citas);
       } catch (err) {
         console.error('Error al obtener citas por paciente:', err);
       }
+    } else if (!this.pacienteId && !this.medicoId) {
+      this.cargarCitas();
     }
   }
 
@@ -53,10 +54,11 @@ export class GestionCitasComponent implements OnInit {
     if (this.medicoId) {
       try {
         this.citas = await this.citasService.getCitasPorMedico(this.medicoId);
-        console.log('Citas filtradas por médico:', this.citas);
       } catch (err) {
         console.error('Error al obtener citas por médico:', err);
       }
+    } else if (!this.pacienteId && !this.medicoId) {
+      this.cargarCitas();
     }
   }
   nuevaCita = {
@@ -75,11 +77,21 @@ export class GestionCitasComponent implements OnInit {
     this.citasService
       .agregarCitaMedica(this.nuevaCita)
       .then(() => {
-        console.log('Cita registrada');
         this.cargarCitas();
-        (document.getElementById('registroCitaModal') as any).classList.remove(
-          'show'
-        ); // cerrar modal si Bootstrap 5
+        const modalElement = document.getElementById('registroCitaModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        modalInstance?.hide();
+
+        setTimeout(() => {
+          const backdrop = document.querySelector('.modal-backdrop');
+          if (backdrop) {
+            backdrop.remove();
+          }
+
+          document.body.classList.remove('modal-open');
+
+          document.body.style.removeProperty('padding-right');
+        }, 300);
       })
       .catch((err: unknown) => {
         if (err instanceof Error) {

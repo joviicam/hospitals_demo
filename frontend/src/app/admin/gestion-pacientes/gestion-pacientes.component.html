@@ -18,8 +18,8 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let paciente of pacientes">
-          <td>{{ paciente.id }}</td>
+        <tr *ngFor="let paciente of pacientes; let index = index">
+          <td>{{ index + 1 }}</td>
           <td>{{ paciente.nombre }}</td>
           <td>{{ paciente.edad }}</td>
           <td>

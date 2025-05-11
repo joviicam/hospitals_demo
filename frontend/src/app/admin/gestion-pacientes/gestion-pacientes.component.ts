@@ -2,6 +2,8 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { PacientesService } from '../../services/pacientes.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { get } from 'node:http';
+declare const bootstrap: any;
 
 @Component({
   selector: 'app-gestion-pacientes',
@@ -15,15 +17,7 @@ export class GestionPacientesComponent implements OnInit {
   constructor(private pacientesService: PacientesService) {}
 
   ngOnInit(): void {
-    this.pacientesService
-      .getPacientes()
-      .then((data) => {
-        this.pacientes = data;
-        console.log('Pacientes:', this.pacientes);
-      })
-      .catch((err) => {
-        console.error('Error al obtener pacientes:', err);
-      });
+    this.getPacientes();
   }
   @ViewChild('modalPaciente') modalPacienteRef!: ElementRef;
 
@@ -37,16 +31,39 @@ export class GestionPacientesComponent implements OnInit {
     antecedentesMedicos: '',
   };
 
+  async getPacientes() {
+    try {
+      this.pacientes = await this.pacientesService.getPacientes();
+    } catch (err) {
+      console.error('Error al obtener pacientes:', err);
+    }
+  }
+
   registrarPaciente() {
     this.pacientesService
       .agregarPaciente(this.nuevoPaciente)
       .then((pacienteCreado) => {
-        this.pacientesService.getPacientes();
+        this.getPacientes();
         this.nuevoPaciente = {
           nombre: '',
           edad: null,
           antecedentesMedicos: '',
         };
+
+        const modalElement = document.getElementById('registroPacienteModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalElement);
+        modalInstance?.hide();
+
+        setTimeout(() => {
+          const backdrop = document.querySelector('.modal-backdrop');
+          if (backdrop) {
+            backdrop.remove();
+          }
+
+          document.body.classList.remove('modal-open');
+
+          document.body.style.removeProperty('padding-right');
+        }, 300);
       })
       .catch((err) => console.error('Error al registrar paciente:', err));
   }
