@@ -1,0 +1,82 @@
+<div class="container mt-5">
+  <h2 class="mb-4 justify-content-left">📋 Gestión de Medicos</h2>
+  <button
+    class="btn btn-primary mb-3"
+    data-bs-toggle="modal"
+    data-bs-target="#registroMedicoModal"
+  >
+    Registrar Médico
+  </button>
+  <div class="table-responsive shadow rounded">
+    <table class="table table-hover table-bordered align-middle text-center">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Especialidad</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let medico of medicos">
+          <td>{{ medico.id }}</td>
+          <td>{{ medico.nombre }}</td>
+          <td>{{ medico.especialidad }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<!-- Modal para registrar médico -->
+<div
+  class="modal fade"
+  id="registroMedicoModal"
+  tabindex="-1"
+  aria-labelledby="registroMedicoModalLabel"
+  aria-hidden="true"
+  #modalMedico
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="registroMedicoModalLabel">
+          Registrar Médico
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="registrarMedico()">
+          <div class="mb-3">
+            <label for="nombreMedico" class="form-label">Nombre</label>
+            <input
+              type="text"
+              class="form-control"
+              id="nombreMedico"
+              [(ngModel)]="nuevoMedico.nombre"
+              name="nombre"
+              required
+            />
+          </div>
+          <div class="mb-3">
+            <label for="especialidadMedico" class="form-label"
+              >Especialidad</label
+            >
+            <input
+              type="text"
+              class="form-control"
+              id="especialidadMedico"
+              [(ngModel)]="nuevoMedico.especialidad"
+              name="especialidad"
+              required
+            />
+          </div>
+          <button type="submit" class="btn btn-primary">Registrar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
